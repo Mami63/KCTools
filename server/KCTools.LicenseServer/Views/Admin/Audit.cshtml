@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "İşlem geçmişi";
+    var logs = ViewBag.Logs as System.Collections.Generic.List<AuditLog>
+               ?? new System.Collections.Generic.List<AuditLog>();
+    var history = ViewBag.History as System.Collections.Generic.List<ActivationHistory>
+                  ?? new System.Collections.Generic.List<ActivationHistory>();
+}
+
+<h1>İşlem geçmişi</h1>
+<p class="sub">AuditLogs ve aktivasyon kayıtları</p>
+
+<div class="panel">
+    <h2 style="margin-top:0">Denetim kayıtları</h2>
+    <table>
+        <thead>
+        <tr><th>Zaman</th><th>Aktör</th><th>Eylem</th><th>Varlık</th><th>Hedef</th><th>IP</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in logs)
+        {
+            <tr>
+                <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.Actor</td>
+                <td class="mono">@item.Action</td>
+                <td>@item.EntityType</td>
+                <td>@item.EntityId</td>
+                <td class="mono">@item.IpAddress</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="panel">
+    <h2 style="margin-top:0">Aktivasyon geçmişi</h2>
+    <table>
+        <thead>
+        <tr><th>Zaman</th><th>Eylem</th><th>HWID</th><th>Cihaz</th><th>Aktör</th><th>Ayrıntı</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in history)
+        {
+            <tr>
+                <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td class="mono">@item.Action</td>
+                <td class="mono">@item.Hwid</td>
+                <td class="mono">@item.DeviceId.ToString().Substring(0, 8)…</td>
+                <td>@item.Actor</td>
+                <td>@item.Details</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

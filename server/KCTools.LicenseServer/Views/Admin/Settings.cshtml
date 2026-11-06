@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Sistem ayarları";
+}
+
+<h1>Sistem ayarları</h1>
+<p class="sub">Salt okunur yapılandırma özeti</p>
+
+<div class="grid">
+    <div class="card">
+        <div class="k">Veritabanı</div>
+        <div class="v" style="font-size:18px">@ViewBag.Provider</div>
+        <div class="s">KCTOOLS_DB_PROVIDER</div>
+    </div>
+    <div class="card">
+        <div class="k">JWT anahtarı</div>
+        <div class="v" style="font-size:18px">@(ViewBag.HasJwtSecret == true ? "tanımlı" : "yok")</div>
+        <div class="s">KCTOOLS_JWT_SECRET</div>
+    </div>
+    <div class="card">
+        <div class="k">Admin anahtarı</div>
+        <div class="v" style="font-size:18px">@(ViewBag.HasAdminKey == true ? "tanımlı" : "yok")</div>
+        <div class="s">KCTOOLS_ADMIN_KEY</div>
+    </div>
+    <div class="card">
+        <div class="k">Offline tolerans</div>
+        <div class="v" style="font-size:18px">@ViewBag.OfflineHours saat</div>
+        <div class="s">KCTOOLS_OFFLINE_HOURS</div>
+    </div>
+</div>
+
+<div class="panel">
+    <h2 style="margin-top:0">Güvenlik durumu</h2>
+    <table>
+        <tbody>
+        <tr><td>Identity parola hash'i</td><td><span class="tag ok">aktif</span></td></tr>
+        <tr><td>Hesap kilitleme (5 / 15 dk)</td><td><span class="tag ok">aktif</span></td></tr>
+        <tr><td>Rol tabanlı yetki (Admin/Customer)</td><td><span class="tag ok">aktif</span></td></tr>
+        <tr><td>CSRF koruması</td><td><span class="tag ok">aktif</span></td></tr>
+        <tr><td>Otomatik migration</td><td>@(ViewBag.AutoMigrate == "1" ? "açık" : "kapalı")</td></tr>
+        </tbody>
+    </table>
+</div>

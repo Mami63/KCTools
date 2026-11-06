@@ -1,0 +1,52 @@
+@model System.Collections.Generic.IEnumerable<Device>
+@{
+    ViewData["Title"] = "Bilgisayarlar";
+}
+
+<h1>Bilgisayarlar</h1>
+<p class="sub">Anahtar sahipliği ve aktivasyon bağlantıları</p>
+
+<div class="panel">
+    <table>
+        <thead>
+        <tr>
+            <th>HWID</th><th>Cihaz</th><th>Makine</th><th>Lisans</th>
+            <th>Anahtar izi</th><th>Son görülme</th><th>Durum</th><th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var device in Model)
+        {
+            <tr>
+                <td class="mono">@device.Hwid</td>
+                <td class="mono">@device.DeviceId.ToString().Substring(0, 8)…</td>
+                <td>@(device.MachineName ?? "—")</td>
+                <td class="mono">@device.License?.Key</td>
+                <td class="mono">@(device.KeyThumbprint is null ? "—" : device.KeyThumbprint.Substring(0, 10) + "…")</td>
+                <td>@device.LastSeenAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @if (device.IsActive)
+                    {
+                        <span class="tag ok">aktif</span>
+                    }
+                    else
+                    {
+                        <span class="tag bad">pasif</span>
+                    }
+                </td>
+                <td>
+                    @if (device.IsActive)
+                    {
+                        <form method="post" asp-action="ResetDevice"
+                              onsubmit="return confirm('Cihaz bağlantısı sıfırlansın mı?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@device.DeviceId" />
+                            <button type="submit" class="small danger">Sıfırla</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,327 @@
+﻿<Window x:Class="KCTools.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:vm="clr-namespace:KCTools.ViewModels"
+        xmlns:views="clr-namespace:KCTools.Views"
+        xmlns:controls="clr-namespace:KCTools.Controls"
+        Title="KC Tools — Android Servis İstasyonu"
+        Icon="Assets/kctools.ico"
+        Width="1440" Height="900" MinWidth="1180" MinHeight="740"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" ResizeMode="CanResize"
+        Background="{StaticResource Brush.Bg.Base}"
+        Foreground="{StaticResource Brush.Text.Primary}"
+        FontFamily="{StaticResource Font.Ui}" FontSize="13"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="54" ResizeBorderThickness="6"
+                            GlassFrameThickness="0" CornerRadius="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DeviceViewModel}">
+            <views:DeviceView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CatalogViewModel}">
+            <views:CatalogView />
+        </DataTemplate>        <DataTemplate DataType="{x:Type vm:RootViewModel}">
+            <views:RootView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:QualcommViewModel}">
+            <views:QualcommView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MtkViewModel}">
+            <views:MtkView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:FastbootViewModel}">
+            <views:FastbootView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AdbViewModel}">
+            <views:AdbView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ModemViewModel}">
+            <views:ModemView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ImeiViewModel}">
+            <views:ImeiView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Border BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="54" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="34" />
+            </Grid.RowDefinitions>
+
+            <!-- ================= BAŞLIK ÇUBUĞU ================= -->
+            <Grid Grid.Row="0" Background="{StaticResource Brush.Bg.TitleBar}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <Image Width="34" Height="34" Source="Assets/logo.png" Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock Text="KC TOOLS" FontSize="13" FontWeight="Bold" Margin="10,0,0,0"
+                               VerticalAlignment="Center" Foreground="{StaticResource Brush.Text.Primary}" />
+                    <Border Width="1" Height="18" Background="{StaticResource Brush.Border.Default}" Margin="14,0" />
+                    <TextBlock Text="Android Servis İstasyonu" FontSize="11.5" VerticalAlignment="Center"
+                               Foreground="{StaticResource Brush.Text.Muted}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Border Style="{StaticResource Pill}" Background="{StaticResource Brush.Bg.Field}"
+                            Padding="9,3" Margin="0,0,14,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="5" Height="5" Fill="{StaticResource Brush.Warning}"
+                                     VerticalAlignment="Center" />
+                            <TextBlock Text="UI ÖNİZLEME" FontSize="8.5" FontWeight="Bold" Margin="6,0,0,0"
+                                       Foreground="{StaticResource Brush.Text.Muted}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Button Style="{StaticResource Btn.Window}" Click="Minimize_Click" ToolTip="Küçült"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Path Data="{StaticResource Icon.Minimize}" Width="12" Height="12" Stretch="Uniform"
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                    </Button>
+
+                    <Button Style="{StaticResource Btn.Window}" Click="MaxRestore_Click"
+                            ToolTip="Büyüt / geri yükle"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Path Width="12" Height="12" Stretch="Uniform"
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Data" Value="{StaticResource Icon.Maximize}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Value="Maximized"
+                                                     Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}">
+                                            <Setter Property="Data" Value="{StaticResource Icon.Restore}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                    </Button>
+
+                    <Button Style="{StaticResource Btn.WindowClose}" Click="Close_Click" ToolTip="Kapat"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Path Data="{StaticResource Icon.Close}" Width="12" Height="12" Stretch="Uniform"
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                    </Button>
+                </StackPanel>
+
+                <Border Grid.ColumnSpan="2" Height="2" VerticalAlignment="Top" IsHitTestVisible="False"
+                        Background="{StaticResource Brush.Brand.Gradient}" />
+            </Grid>
+
+            <!-- ================= GÖVDE ================= -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="244" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Sol navigasyon -->
+                <Border Grid.Column="0" Background="{StaticResource Brush.Bg.Side}"
+                        BorderBrush="{StaticResource Brush.Border.Soft}" BorderThickness="0,0,1,0">
+                    <Grid Margin="10,16,10,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="MODÜLLER" Style="{StaticResource T.Section}"
+                                   Margin="10,0,0,8" />
+
+                        <ListBox Grid.Row="1" Style="{StaticResource Nav.List}"
+                                 ItemTemplate="{StaticResource Tpl.Nav}"
+                                 ItemsSource="{Binding NavItems}"
+                                 SelectedItem="{Binding SelectedNav, Mode=TwoWay}"
+                                 VerticalAlignment="Top" />
+
+                        <!-- Canlı cihaz listesi -->
+                        <StackPanel Grid.Row="2" Margin="6,10,6,0">
+                            <Border Height="1" Background="{StaticResource Brush.Border.Soft}" Margin="0,0,0,10" />
+                            <DockPanel Margin="4,0,4,7">
+                                <TextBlock Text="ALGILANAN CİHAZLAR" Style="{StaticResource T.Section}" />
+                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                           Text="{Binding DeviceCountText}" FontSize="9.5"
+                                           Foreground="{StaticResource Brush.Text.Dim}" />
+                            </DockPanel>
+                            <ScrollViewer MaxHeight="126" VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding Devices}"
+                                              ItemTemplate="{StaticResource Tpl.DeviceRow}" />
+                            </ScrollViewer>
+                            <TextBlock Text="Cihaz bekleniyor — USB takıldığında otomatik listelenir."
+                                       Style="{StaticResource T.Hint}" Margin="4,2,4,0"
+                                       Visibility="{Binding IsDeviceListEmpty, Converter={StaticResource BoolToVis}}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Margin="6,12,6,0">
+                            <Border Height="1" Background="{StaticResource Brush.Border.Soft}" Margin="0,0,0,12" />
+                            <TextBlock Text="{Binding VersionText}" Style="{StaticResource T.Mono}"
+                                       FontSize="10.5" />
+                            <TextBlock Text="© 2026 KC Tools" FontSize="10" Margin="0,3,0,0"
+                                       Foreground="{StaticResource Brush.Text.Dim}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Sağ içerik -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="6" />
+                        <RowDefinition Height="238" MinHeight="120" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Sayfa başlığı + port kontrolleri -->
+                    <Border Grid.Row="0" Padding="22,15,22,14"
+                            BorderBrush="{StaticResource Brush.Border.Soft}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <TextBlock Text="{Binding SelectedNav.Title}" Style="{StaticResource T.PageTitle}" />
+                                <TextBlock Text="{Binding SelectedNav.Subtitle}" Style="{StaticResource T.PageSub}"
+                                           Margin="0,4,0,0" />
+                                <StackPanel Orientation="Horizontal" Margin="0,7,0,0"
+                                            Visibility="{Binding HasPhoneProfile, Converter={StaticResource BoolToVis}}">
+                                    <Border Background="{StaticResource Brush.Accent.Soft}" CornerRadius="20"
+                                            Padding="10,3" ToolTip="{Binding PhoneProfileText}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Width="10" Height="10" Stretch="Uniform" Margin="0,0,6,0"
+                                                  Data="{StaticResource Icon.Plug}"
+                                                  Fill="{StaticResource Brush.Accent}"
+                                                  VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding PhoneProfileShortText}" FontSize="10"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource Brush.Accent}"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ComboBox Style="{StaticResource Input.Combo}" Width="252"
+                                          ItemsSource="{Binding Devices}"
+                                          SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                          ItemTemplate="{StaticResource Tpl.DeviceItem}"
+                                          ToolTip="Algılanan cihazlar (USB / COM)" />
+                                <Button Style="{StaticResource Btn.Ghost}" Width="36" Margin="8,0,0,0"
+                                        Command="{Binding RecoveryCommand}"
+                                        ToolTip="Tek tık: cihazı recovery moduna yeniden başlat (adb / fastboot)">
+                                    <Path Width="13" Height="13" Stretch="Uniform"
+                                          Data="{StaticResource Icon.Restore}"
+                                          Fill="{StaticResource Brush.Text.Secondary}" />
+                                </Button>
+                                <Button Style="{StaticResource Btn.Ghost}" Content="Yenile" Margin="8,0,0,0"
+                                        Command="{Binding RefreshDevicesCommand}"
+                                        ToolTip="Cihazları yeniden tara" />
+                                <Button Style="{StaticResource Btn.Primary}" Width="134" Margin="8,0,0,0"
+                                        Content="{Binding ConnectButtonText}"
+                                        Command="{Binding ConnectCommand}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Modül içeriği -->
+                    <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" />
+
+                    <GridSplitter Grid.Row="2" Style="{StaticResource App.Splitter}"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                  ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+
+                    <!-- Konsol -->
+                    <controls:LogPanel Grid.Row="3" MinHeight="120" />
+                </Grid>
+            </Grid>
+
+            <!-- ================= DURUM ÇUBUĞU ================= -->
+            <Border Grid.Row="2" Background="{StaticResource Brush.Bg.TitleBar}"
+                    BorderBrush="{StaticResource Brush.Border.Soft}" BorderThickness="0,1,0,0">
+                <Grid Margin="16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="6" Height="6" VerticalAlignment="Center">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{StaticResource Brush.Text.Dim}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLinkAlive}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource Brush.Success}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+
+                        <TextBlock Text="PORT" FontSize="9.5" FontWeight="Bold" Margin="8,0,7,0"
+                                   VerticalAlignment="Center" Foreground="{StaticResource Brush.Text.Dim}" />
+                        <TextBlock Text="{Binding StatusPortText}" FontSize="11" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Brush.Text.Secondary}" />
+
+                        <Border Width="1" Height="14" Background="{StaticResource Brush.Border.Default}"
+                                Margin="14,0" />
+
+                        <TextBlock Text="MOD" FontSize="9.5" FontWeight="Bold" Margin="0,0,7,0"
+                                   VerticalAlignment="Center" Foreground="{StaticResource Brush.Text.Dim}" />
+                        <TextBlock Text="{Binding StatusModeText}" FontSize="11" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" Foreground="{StaticResource Brush.Accent}" />
+
+                        <Border Width="1" Height="14" Background="{StaticResource Brush.Border.Default}"
+                                Margin="14,0" />
+
+                        <TextBlock Text="{Binding StatusCaption}" FontSize="11" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Brush.Text.Muted}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="LİSANS" FontSize="9.5" FontWeight="Bold" Margin="0,0,7,0"
+                                   VerticalAlignment="Center" Foreground="{StaticResource Brush.Text.Dim}" />
+                        <Border Background="{StaticResource Brush.Accent.Soft}" CornerRadius="20" Padding="8,2">
+                            <TextBlock Text="{Binding License.Summary}" FontSize="10" FontWeight="SemiBold"
+                                       Foreground="{StaticResource Brush.Accent}" />
+                        </Border>
+
+                        <Border Width="1" Height="14" Background="{StaticResource Brush.Border.Default}"
+                                Margin="14,0" />
+
+                        <TextBlock Text="{Binding VersionText}" FontFamily="{StaticResource Font.Mono}"
+                                   FontSize="10.5" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Brush.Text.Muted}" />
+                        <TextBlock Text="·" Margin="8,0" FontSize="11" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Brush.Text.Dim}" />
+                        <TextBlock Text="W10/11" FontFamily="{StaticResource Font.Mono}" FontSize="10.5"
+                                   VerticalAlignment="Center" Foreground="{StaticResource Brush.Text.Dim}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

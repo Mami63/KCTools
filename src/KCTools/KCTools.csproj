@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>KCTools</AssemblyName>
+    <RootNamespace>KCTools</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\kctools.ico</ApplicationIcon>
+    <Product>KC Tools</Product>
+    <Company>KC Tools</Company>
+    <Version>1.0.0</Version>
+    <AssemblyTitle>KC Tools — Android Servis İstasyonu</AssemblyTitle>
+    <Description>Qualcomm / MTK / Fastboot / ADB servis arayüzü</Description>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\kctools.ico" />
+    <Resource Include="Assets\logo.png" />
+    <Content Include="Assets\DeviceCatalog.json"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+    <!-- Tek dosya dağıtımda JSON bulunamazsa gömülü kopya kullanılır -->
+    <EmbeddedResource Include="Assets\DeviceCatalog.json"
+                      LogicalName="KCTools.DeviceCatalog.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- adb/fastboot: build ve publish çıktısına platform-tools olarak kopyalanır -->
+    <Content Include="..\..\tools\platform-tools\**\*"
+             Link="platform-tools\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- DeviceWatcher: ManagementEventWatcher / Win32_PnPEntity (Windows yönetim araçları) -->
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <!-- AT/diag katmanı: SerialPort (net8'de ayrı paket) -->
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+    <!-- Oturum dosyası: DPAPI (ProtectedData) -->
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

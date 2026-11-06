@@ -1,0 +1,63 @@
+@model System.Collections.Generic.IEnumerable<License>
+@{
+    ViewData["Title"] = "Hesabım";
+    var user = ViewBag.User as AppUser;
+    var roles = ViewBag.Roles as System.Collections.Generic.IList<string>
+                ?? new System.Collections.Generic.List<string>();
+}
+
+<h1>Hesabım</h1>
+<p class="sub">Kullanıcı bilgileri, lisans ve cihazlarınız</p>
+
+<div class="grid">
+    <div class="card">
+        <div class="k">E-posta</div>
+        <div class="v" style="font-size:16px">@user?.Email</div>
+        <div class="s">@string.Join(", ", roles)</div>
+    </div>
+    <div class="card">
+        <div class="k">Hesap durumu</div>
+        <div class="v" style="font-size:16px">@(user?.IsActive == true ? "aktif" : "devre dışı")</div>
+        <div class="s">son giriş @(user?.LastLoginAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "—")</div>
+    </div>
+</div>
+
+<div class="panel">
+    <h2 style="margin-top:0">Lisanslarınız</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="muted">Hesabınıza bağlı lisans yok.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+            <tr><th>Anahtar</th><th>Plan</th><th>Kredi</th><th>Bitiş</th><th>Durum</th><th>Cihazlar</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var license in Model)
+            {
+                var now = System.DateTimeOffset.UtcNow;
+                var status = license.IsRevoked ? "iptal"
+                    : license.IsFrozen ? "donmuş"
+                    : now > license.EndsAt ? "süre doldu" : "aktif";
+
+                <tr>
+                    <td class="mono">@license.Key</td>
+                    <td>@license.Plan</td>
+                    <td>@license.Credits</td>
+                    <td>@license.EndsAt.ToString("yyyy-MM-dd")</td>
+                    <td><span class="tag @(status == "aktif" ? "ok" : "bad")">@status</span></td>
+                    <td>
+                        @foreach (var device in license.Devices.Where(item => item.IsActive))
+                        {
+                            <div class="mono">@device.Hwid · @device.MachineName</div>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

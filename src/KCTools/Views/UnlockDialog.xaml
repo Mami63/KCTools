@@ -1,0 +1,44 @@
+<Window x:Class="KCTools.Views.UnlockDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Telefon Kilidi" Width="400" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent" ResizeMode="NoResize" ShowInTaskbar="False">
+
+    <Border Background="{StaticResource Brush.Bg.Card}" BorderBrush="{StaticResource Brush.Border.Default}"
+            BorderThickness="1" CornerRadius="14" Padding="22">
+        <StackPanel>
+            <DockPanel Margin="0,0,0,6">
+                <Button DockPanel.Dock="Right" Width="26" Height="26" Style="{StaticResource Btn.Ghost}"
+                        Padding="0" Click="OnCancel" ToolTip="Kapat">
+                    <Path Width="10" Height="10" Stretch="Uniform" Data="{StaticResource Icon.Close}"
+                          Fill="{StaticResource Brush.Text.Muted}" />
+                </Button>
+                <TextBlock Text="Telefon Kilidi" FontSize="16" FontWeight="SemiBold"
+                           Foreground="{StaticResource Brush.Text.Primary}" />
+            </DockPanel>
+
+            <TextBlock Style="{StaticResource T.Hint}" TextWrapping="Wrap" Margin="0,0,0,14"
+                       Text="Ekran şifresini/PIN'ini girin. Uygulama ADB ile telefonu uyandırıp kilidi açar; şifre yalnızca aşağıdaki kutu işaretlenirse DPAPI ile şifrelenerek saklanır." />
+
+            <PasswordBox x:Name="PinBox" Height="40" FontSize="18" MaxLength="16"
+                         Background="{StaticResource Brush.Bg.Field}"
+                         Foreground="{StaticResource Brush.Text.Primary}"
+                         BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                         Padding="12,0" VerticalContentAlignment="Center" />
+
+            <CheckBox x:Name="RememberBox" Margin="0,12,0,0" FontSize="11"
+                      Foreground="{StaticResource Brush.Text.Secondary}"
+                      Content="Bu cihazda hatırla (DPAPI · yalnızca bu Windows kullanıcısı)" />
+
+            <TextBlock x:Name="ErrorText" Style="{StaticResource T.Hint}" Margin="0,8,0,0"
+                       Foreground="{StaticResource Brush.Warning}" TextWrapping="Wrap" Visibility="Collapsed" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button Style="{StaticResource Btn.Ghost}" Content="İptal" Width="90" Click="OnCancel" />
+                <Button Style="{StaticResource Btn.Primary}" Content="Kilidi Aç" Width="120" Margin="10,0,0,0"
+                        Click="OnConfirm" IsDefault="True" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

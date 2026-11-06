@@ -1,0 +1,236 @@
+﻿<UserControl x:Class="KCTools.Views.CatalogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="22,18,14,18">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="340" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Markalar -->
+        <Border Style="{StaticResource Card}" Margin="0,0,14,0" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="MARKALAR" FontSize="10" FontWeight="Bold"
+                           Foreground="{StaticResource Brush.Text.Muted}" Margin="2,0,0,10" />
+                <ListBox ItemsSource="{Binding Brands}"
+                         SelectedItem="{Binding SelectedBrand, Mode=TwoWay}"
+                         Background="Transparent" BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0,0,0,4" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd" CornerRadius="8" Padding="10,8" Background="Transparent">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background"
+                                                        Value="{StaticResource Brush.Bg.CardAlt}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="Background"
+                                                        Value="{StaticResource Brush.Accent.Soft}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.Text.Primary}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="1" Text="{Binding ModelCount}" FontSize="10"
+                                           Foreground="{StaticResource Brush.Text.Muted}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- Modeller -->
+        <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,14,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <DockPanel Margin="0,0,0,10">
+                        <Button DockPanel.Dock="Right" Content="Yenile" Style="{StaticResource Btn.Ghost}"
+                                FontSize="10.5" Padding="9,5" Command="{Binding RefreshCommand}" />
+                        <TextBlock Text="MODELLER" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Brush.Text.Muted}" />
+                    </DockPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Style="{StaticResource Input.Text}"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="Model adı, kod veya codename ara" />
+                        <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="150"
+                                  Margin="10,0,0,0" ItemsSource="{Binding Platforms}"
+                                  SelectedItem="{Binding SelectedPlatform, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding Models}"
+                         SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                         Background="Transparent" BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0,0,0,4" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd" CornerRadius="8" Padding="10,8" Background="Transparent">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background"
+                                                        Value="{StaticResource Brush.Bg.CardAlt}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="Background"
+                                                        Value="{StaticResource Brush.Accent.Soft}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="SemiBold"
+                                               Foreground="{StaticResource Brush.Text.Primary}" />
+                                    <TextBlock FontSize="10" Foreground="{StaticResource Brush.Text.Muted}"
+                                               Margin="0,2,0,0">
+                                        <Run Text="{Binding Code}" />
+                                        <Run Text=" · " />
+                                        <Run Text="{Binding Codename}" />
+                                        <Run Text=" · " />
+                                        <Run Text="{Binding Platform}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <Border Grid.Column="1" CornerRadius="10" Padding="7,2" VerticalAlignment="Center"
+                                        Background="{StaticResource Brush.Bg.Field}">
+                                    <TextBlock Text="{Binding TestedText}" FontSize="8.5" FontWeight="Bold"
+                                               Foreground="{StaticResource Brush.Text.Muted}" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- Detay -->
+        <StackPanel Grid.Column="2">
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="{Binding DetailTitle}" Style="{StaticResource T.CardTitle}"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding DetailTestedText}" FontSize="9.5" FontWeight="Bold"
+                               Margin="0,6,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{StaticResource Brush.Warning}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DetailTested}" Value="True">
+                                        <Setter Property="Foreground" Value="{StaticResource Brush.Success}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Border Style="{StaticResource Sep}" Margin="0,12,0,10" />
+
+                    <Grid Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Model kodu" Style="{StaticResource T.Hint}" />
+                        <TextBlock Grid.Column="1" Text="{Binding DetailCode}" Style="{StaticResource T.Mono}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Codename" Style="{StaticResource T.Hint}" />
+                        <TextBlock Grid.Column="1" Text="{Binding DetailCodename}" Style="{StaticResource T.Mono}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Platform" Style="{StaticResource T.Hint}" />
+                        <TextBlock Grid.Column="1" Text="{Binding DetailPlatform}" Style="{StaticResource T.Value}"
+                                   TextWrapping="Wrap" />
+                    </Grid>
+                    <Grid Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Modlar" Style="{StaticResource T.Hint}" />
+                        <TextBlock Grid.Column="1" Text="{Binding DetailModes}" Style="{StaticResource T.Value}"
+                                   TextWrapping="Wrap" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Not" Style="{StaticResource T.Hint}" />
+                        <TextBlock Grid.Column="1" Text="{Binding DetailNotes}" Style="{StaticResource T.Hint}"
+                                   TextWrapping="Wrap" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="BAĞLI CİHAZ" FontSize="10" FontWeight="Bold"
+                               Foreground="{StaticResource Brush.Text.Muted}" />
+                    <TextBlock Text="{Binding DetectedText}" Style="{StaticResource T.Value}" Margin="0,8,0,0"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding MatchText}" Style="{StaticResource T.Value}" Margin="0,6,0,0"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding MatchConfidence}" Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+
+                    <Button Style="{StaticResource Btn.Primary}" Content="Bu Cihaza Ata" Margin="0,12,0,0"
+                            HorizontalAlignment="Left" Command="{Binding AssignCommand}"
+                            ToolTip="Seçili modeli bu seri numarasına kalıcı olarak ata" />
+                    <TextBlock Style="{StaticResource T.Hint}" Margin="0,10,0,0"
+                               Text="Atama yalnızca tanımlama içindir; cihaz üzerinde değişiklik yapmaz. Test edilmemiş modeller yeşil işaret taşımaz." />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

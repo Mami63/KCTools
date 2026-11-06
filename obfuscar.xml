@@ -1,0 +1,42 @@
+﻿<?xml version='1.0'?>
+<!--
+  KC Tools — Obfuscar yapılandırması (örnek)
+
+  Kullanım:
+    dotnet tool install -g Obfuscar.GlobalTool
+    dotnet publish src\KCTools -c Release
+    obfuscar.console obfuscar.xml
+
+  WPF, XAML tiplerini ve binding özelliklerini ADA GÖRE çözer; bu yüzden
+  aşağıdaki tipler korunur. Geriye kalan servis/protokol içleri karartılır.
+-->
+<Obfuscator>
+  <Var name="InPath" value="src\KCTools\bin\Release\net8.0-windows" />
+  <Var name="OutPath" value="dist\obfuscated" />
+  <Var name="ExtraFrameworkFolders" value=".dotnet\shared\Microsoft.WindowsDesktop.App\8.0.33;.dotnet\shared\Microsoft.NETCore.App\8.0.33" />
+
+  <!-- Genel API (WPF binding'lerinin gördüğü üyeler) korunur -->
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="RenameProperties" value="false" />
+  <Var name="RenameEvents" value="false" />
+  <Var name="RenameFields" value="false" />
+  <Var name="UseUnicodeNames" value="false" />
+  <Var name="HideStrings" value="true" />
+
+  <Module file="$(InPath)\KCTools.dll">
+    <!-- XAML tarafından ada göre çözülen tipler -->
+    <SkipType name="KCTools.App" />
+    <SkipType name="KCTools.MainWindow" />
+    <SkipType name="KCTools.Views.*" />
+    <SkipType name="KCTools.Controls.*" />
+    <SkipType name="KCTools.ViewModels.*" />
+    <SkipType name="KCTools.Models.*" />
+    <SkipType name="KCTools.Common.*" />
+
+    <!-- WPF binding ile erişilen servis yüzeyleri -->
+    <SkipType name="KCTools.Services.LogHub" />
+    <SkipType name="KCTools.Services.LicenseService" />
+    <SkipType name="KCTools.Services.Toolchain" />
+  </Module>
+</Obfuscator>

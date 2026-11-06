@@ -1,0 +1,367 @@
+﻿<UserControl x:Class="KCTools.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,24,24">
+            <StackPanel MaxWidth="900" HorizontalAlignment="Left">
+
+                <!-- Görünüm -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Görünüm" Style="{StaticResource T.CardTitle}" />
+                        <TextBlock Text="Tema ve vurgu rengi tercihleri"
+                                   Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Tema" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="Bu sürümde karanlık tema sabittir."
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="230"
+                                      VerticalAlignment="Center" ItemsSource="{Binding Themes}"
+                                      SelectedItem="{Binding ThemeName, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource Sep}" Margin="0,2,0,14" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Vurgu rengi" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="Material 3 vurgu paleti — teal / indigo gradyanı"
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <Border Grid.Column="1" Background="{StaticResource Brush.Bg.Field}"
+                                    BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                                    CornerRadius="8" Padding="10,6" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="16" Height="16" CornerRadius="8"
+                                            Background="{StaticResource Brush.Accent}" />
+                                    <TextBlock Text="#2ED9C3" Style="{StaticResource T.Mono}" Margin="9,0,0,0"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Günlük -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Günlük" Style="{StaticResource T.CardTitle}" />
+                        <TextBlock Text="Konsol panelinin davranışı"
+                                   Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Ayrıntılı günlük" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="Adım satırlarını konsola yazar."
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource Switch}" VerticalAlignment="Center"
+                                      IsChecked="{Binding VerboseLogging, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Yazma öncesi onay" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="Flash işlemlerinden önce onay ister."
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource Switch}" VerticalAlignment="Center"
+                                      IsChecked="{Binding ConfirmBeforeFlash, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Otomatik port algılama" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="USB değişimlerinde port listesini yeniler."
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource Switch}" VerticalAlignment="Center"
+                                      IsChecked="{Binding AutoDetectPorts, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Günlük seviyesi" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="Sade modda yalnızca sonuçlar gösterilir."
+                                           Style="{StaticResource T.Hint}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="230"
+                                      VerticalAlignment="Center" ItemsSource="{Binding LogLevels}"
+                                      SelectedItem="{Binding SelectedLogLevel, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource Sep}" Margin="0,0,0,12" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource Btn.Secondary}" Content="Günlük klasörünü aç"
+                                    Command="{Binding OpenLogFolderCommand}" />
+                            <Button Style="{StaticResource Btn.Ghost}" Content="Günlüğü temizle"
+                                    Margin="10,0,0,0" Command="{Binding ClearLogCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Lisans -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,14">
+                            <Border DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                    Style="{StaticResource Pill}" Padding="8,3">
+                                <TextBlock Text="{Binding License.StateText}" FontSize="8.5" FontWeight="Bold"
+                                           Foreground="{StaticResource Brush.Accent}" />
+                            </Border>
+                            <TextBlock Text="Lisans" Style="{StaticResource T.CardTitle}" />
+                        </DockPanel>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{Binding License.Summary}" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="{Binding License.Detail}" Style="{StaticResource T.Hint}"
+                                           Margin="0,2,0,0" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Text="{Binding MachineName}" Style="{StaticResource T.Mono}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="HWID" Style="{StaticResource T.Label}" />
+                            <TextBlock Grid.Column="1" Text="{Binding License.Hwid}"
+                                       Style="{StaticResource T.Mono}" Foreground="{StaticResource Brush.Accent}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Sunucu" Style="{StaticResource T.Label}" />
+                            <TextBox Grid.Column="1" Style="{StaticResource Input.Text}"
+                                     FontFamily="{StaticResource Font.Mono}"
+                                     Text="{Binding ServerUrl, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource Input.Text}" FontFamily="{StaticResource Font.Mono}"
+                                     Text="{Binding LicenseKeyInput, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Style="{StaticResource Btn.Primary}" Content="Aktive Et"
+                                    Margin="10,0,0,0" Command="{Binding ActivateCommand}" />
+                            <Button Grid.Column="2" Style="{StaticResource Btn.Ghost}" Content="Yenile"
+                                    Margin="8,0,0,0" Command="{Binding RefreshLicenseCommand}" />
+                        </Grid>
+
+                        <TextBlock Text="{Binding LicenseMessage}" Style="{StaticResource T.Hint}" />
+                        <TextBlock Style="{StaticResource T.Hint}" Margin="0,6,0,0"
+                                   Text="Anahtar KC-XXXX-XXXX-XXXX biçimindedir. JWT sunucuda imzalanır ve DPAPI ile saklanır; sunucuya ulaşılamazsa süresi dolmamış oturum çevrimdışı geçerlidir." />
+                    </StackPanel>
+                </Border>
+
+                <!-- Ortam Kontrolü -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,12">
+                            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Yeniden Tara"
+                                    Style="{StaticResource Btn.Ghost}" FontSize="10.5" Padding="9,4"
+                                    Command="{Binding RefreshEnvironmentCommand}" />
+                            <StackPanel>
+                                <TextBlock Text="Ortam Kontrolü" Style="{StaticResource T.CardTitle}" />
+                                <TextBlock Style="{StaticResource T.CardCaption}" Margin="0,2,0,0">
+                                    <Run Text="Son tarama:" />
+                                    <Run Text="{Binding EnvironmentChecks.LastRunText, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DockPanel>
+
+                        <ItemsControl ItemsSource="{Binding EnvironmentChecks.Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Width="6" Height="6" VerticalAlignment="Center" Margin="0,0,9,0">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="{StaticResource Brush.Warning}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Ok}" Value="True">
+                                                            <Setter Property="Fill" Value="{StaticResource Brush.Success}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource T.Value}" />
+                                            <TextBlock Text="{Binding Detail}" Style="{StaticResource T.Hint}"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding StatusText}" FontSize="9.5"
+                                                   FontWeight="SemiBold" VerticalAlignment="Center"
+                                                   Foreground="{StaticResource Brush.Text.Muted}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Araç Zinciri -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,14">
+                            <Border DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource Pill}"
+                                    Padding="8,3" Background="{StaticResource Brush.Bg.Field}">
+                                <TextBlock Text="{Binding Tools.StatusText}" FontSize="8.5" FontWeight="Bold"
+                                           Foreground="{StaticResource Brush.Accent}" />
+                            </Border>
+                            <TextBlock Text="Araç Zinciri" Style="{StaticResource T.CardTitle}" />
+                        </DockPanel>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="adb.exe" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="{Binding Tools.AdbPathDisplay}"
+                                           FontFamily="{StaticResource Font.Mono}" FontSize="10"
+                                           Foreground="{StaticResource Brush.Text.Muted}"
+                                           TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                           ToolTip="{Binding Tools.AdbPathDisplay}" />
+                            </StackPanel>
+                            <Border Grid.Column="1" Background="{StaticResource Brush.Bg.Field}" CornerRadius="20"
+                                    Padding="8,2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Tools.AdbVersion}" FontSize="9"
+                                           Foreground="{StaticResource Brush.Text.Secondary}" />
+                            </Border>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="fastboot.exe" Style="{StaticResource T.Value}" />
+                                <TextBlock Text="{Binding Tools.FastbootPathDisplay}"
+                                           FontFamily="{StaticResource Font.Mono}" FontSize="10"
+                                           Foreground="{StaticResource Brush.Text.Muted}"
+                                           TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                           ToolTip="{Binding Tools.FastbootPathDisplay}" />
+                            </StackPanel>
+                            <Border Grid.Column="1" Background="{StaticResource Brush.Bg.Field}" CornerRadius="20"
+                                    Padding="8,2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Tools.FastbootVersion}" FontSize="9"
+                                           Foreground="{StaticResource Brush.Text.Secondary}" />
+                            </Border>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Klasör" Style="{StaticResource T.Label}" />
+                            <TextBlock Grid.Column="1" Text="{Binding Tools.ToolsFolder}"
+                                       FontFamily="{StaticResource Font.Mono}" FontSize="10"
+                                       Foreground="{StaticResource Brush.Text.Muted}"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                                       ToolTip="{Binding Tools.ToolsFolder}" />
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource Btn.Secondary}" Content="Yeniden Tara"
+                                    Command="{Binding RefreshToolsCommand}" />
+                        </StackPanel>
+
+                        <TextBlock Style="{StaticResource T.Hint}" Margin="0,10,0,0"
+                                   Text="platform-tools klasörünü tools\platform-tools altına kopyalayın veya KCTOOLS_TOOLS ortam değişkeniyle yolu belirtin." />
+                    </StackPanel>
+                </Border>
+
+                <!-- Hakkında -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Hakkında" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+
+                        <Grid Margin="0,0,0,9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Sürüm" Style="{StaticResource T.Label}" />
+                            <TextBlock Grid.Column="1" Text="{Binding VersionText}" Style="{StaticResource T.Value}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Çalışma ortamı" Style="{StaticResource T.Label}" />
+                            <TextBlock Grid.Column="1" Text="{Binding RuntimeText}" Style="{StaticResource T.Value}" />
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Lisans türü" Style="{StaticResource T.Label}" />
+                            <TextBlock Grid.Column="1" Text="{Binding License.StateText}" Style="{StaticResource T.Value}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource Sep}" />
+                        <TextBlock Style="{StaticResource T.Hint}"
+                                   Text="KC Tools — Android servis istasyonu. Bu sürüm arayüz önizlemesidir; cihaz haberleşme katmanı sonraki parçada eklenir." />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

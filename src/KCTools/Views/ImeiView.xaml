@@ -1,0 +1,273 @@
+﻿<UserControl x:Class="KCTools.Views.ImeiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:KCTools.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,14,22">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,16,0">
+                    <!-- Bağlantı -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,14">
+                                <TextBlock Text="Modem Portu" Style="{StaticResource T.CardTitle}" />
+                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                           Text="{Binding PortStateText}" Style="{StaticResource T.Mono}"
+                                           FontSize="10.5" VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.Text.Muted}" />
+                            </DockPanel>
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Style="{StaticResource Input.Combo}" ItemsSource="{Binding Ports}"
+                                          SelectedItem="{Binding SelectedPort, Mode=TwoWay}"
+                                          DisplayMemberPath="Display" ToolTip="{Binding PortHint}" />
+                                <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="112"
+                                          Margin="10,0,0,0" ItemsSource="{Binding BaudRates}"
+                                          SelectedItem="{Binding SelectedBaud, Mode=TwoWay}" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Ghost}" Content="AT Bul"
+                                        FontSize="10.5" Padding="8,6" Margin="6,0,0,0"
+                                        ToolTip="COM portlarını AT komutuyla dene"
+                                        Command="{Binding AutoDetectCommand}" />
+                                <Button Grid.Column="3" Style="{StaticResource Btn.Ghost}" Content="Yenile"
+                                        FontSize="10.5" Padding="8,6" Margin="6,0,0,0"
+                                        Command="{Binding RefreshPortsCommand}" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="IMEI, telefonun modem (AT) portundan okunur. Diagnostic portu değil, modem portunu seçin." />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Primary}"
+                                        Content="{Binding PortButtonText}" Width="132" Margin="12,0,0,0"
+                                        Command="{Binding TogglePortCommand}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- IMEI okuma -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,12">
+                                <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="IMEI Oku"
+                                        Style="{StaticResource Btn.Secondary}" FontSize="10.5" Padding="10,5"
+                                        Command="{Binding ReadImeiCommand}" />
+                                <TextBlock Text="Mevcut IMEI" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+
+                            <TextBlock Text="{Binding CurrentImei}" FontFamily="{StaticResource Font.Mono}"
+                                       FontSize="24" FontWeight="SemiBold"
+                                       Foreground="{StaticResource Brush.Text.Primary}" />
+                            <TextBlock Text="{Binding CurrentImeiStatus}" Style="{StaticResource T.Hint}"
+                                       Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Onarım -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="IMEI Onarımı" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Yeni IMEI'yi girin, QCN üzerinde yedekli olarak değiştirin."
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}" FontFamily="{StaticResource Font.Mono}"
+                                         Text="{Binding NewImei, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="15 haneli yeni IMEI" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Ghost}" Content="Luhn Düzelt"
+                                        Margin="10,0,0,0" Command="{Binding FixLuhnCommand}" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Primary}" Content="IMEI Onar"
+                                        Width="118" Margin="10,0,0,0" Command="{Binding RepairCommand}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding NewImeiStatus}" Style="{StaticResource T.Hint}" />
+
+                            <Border Style="{StaticResource Sep}" Margin="0,12,0,10" />
+
+                            <CheckBox Style="{StaticResource Switch}" IsChecked="{Binding Confirmed, Mode=TwoWay}"
+                                      Content="Cihazın sahibi olduğumu ve yasal sorumluluğu kabul ettiğimi onaylıyorum"
+                                      FontSize="11" TextBlock.Foreground="{StaticResource Brush.Text.Secondary}" />
+
+                            <TextBlock Style="{StaticResource T.Hint}" Margin="0,10,0,0"
+                                       Text="Onarım yalnızca QCN dosyası üzerinde çalışır. İşlem öncesi otomatik yedek alınır; cihazda değişiklik için QCN'nin cihaza yazılması ayrı bir adımdır (QPST)." />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- QCN -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="QCN Kaynağı" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Mevcut IMEI'yi içeren yedek dosyasını seçin"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                                        CornerRadius="8" Height="38" Padding="12,0">
+                                    <TextBlock Text="{Binding QcnFileName}" Style="{StaticResource T.Mono}"
+                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="QCN Seç"
+                                        Margin="10,0,0,0" Command="{Binding BrowseQcnCommand}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding QcnSummary}" Style="{StaticResource T.Hint}"
+                                           VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Ghost}" Content="Eşleşmeleri Ara"
+                                        Command="{Binding SearchQcnCommand}" />
+                            </Grid>
+
+                            <ListBox ItemsSource="{Binding QcnMatches}" MaxHeight="120" Background="Transparent"
+                                     BorderThickness="0" SelectedItem="{Binding SelectedMatch, Mode=TwoWay}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Focusable" Value="False" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="6"
+                                                            Padding="8,4">
+                                                        <ContentPresenter />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background"
+                                                                    Value="{StaticResource Brush.Accent.Soft}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="82" />
+                                                <ColumnDefinition Width="96" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding OffsetText}" Style="{StaticResource T.Mono}"
+                                                       FontSize="10" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Kind}" FontSize="10"
+                                                       Foreground="{StaticResource Brush.Accent}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Preview}"
+                                                       Style="{StaticResource T.Mono}" FontSize="10"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Border Style="{StaticResource Sep}" Margin="0,12,0,10" />
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Yedekler" Style="{StaticResource T.Hint}" VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Content="Listele" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Command="{Binding RefreshBackupsCommand}" />
+                                <Button Grid.Column="2" Content="Geri Yükle" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Margin="6,0,0,0"
+                                        Command="{Binding RestoreBackupCommand}" />
+                                <Button Grid.Column="3" Content="Doğrula" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Margin="6,0,0,0"
+                                        Command="{Binding VerifyCommand}" />
+                            </Grid>
+
+                            <ListBox ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
+                                     DisplayMemberPath="Display" MaxHeight="96" Background="Transparent"
+                                     BorderThickness="0" FontSize="10" />                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <controls:OperationStatusCard />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Güvenlik ve Yasal" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="IMEI değiştirmek birçok ülkede yasal sınırlamalara tabidir; yalnızca sahibi olduğunuz cihazlarda kullanın." />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Her kayıt öncesi QCN dosyasının zaman damgalı yedeği alınır: %LOCALAPPDATA%\\KCTools\\QcnBackups." />
+                            </DockPanel>
+                            <DockPanel>
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Onarım sonrası IMEI'yi AT+CGSN ile doğrulayın; kalıcı sonuç için QCN'nin cihaza yazılması gerekir." />
+                            </DockPanel>
+                            <Border Style="{StaticResource Sep}" Margin="0,12,0,10" />
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Yedekler" Style="{StaticResource T.Hint}" VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Content="Listele" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Command="{Binding RefreshBackupsCommand}" />
+                                <Button Grid.Column="2" Content="Geri Yükle" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Margin="6,0,0,0"
+                                        Command="{Binding RestoreBackupCommand}" />
+                                <Button Grid.Column="3" Content="Doğrula" Style="{StaticResource Btn.Ghost}"
+                                        FontSize="10" Padding="7,3" Margin="6,0,0,0"
+                                        Command="{Binding VerifyCommand}" />
+                            </Grid>
+
+                            <ListBox ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
+                                     DisplayMemberPath="Display" MaxHeight="96" Background="Transparent"
+                                     BorderThickness="0" FontSize="10" />                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

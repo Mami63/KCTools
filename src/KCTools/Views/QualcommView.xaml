@@ -1,0 +1,221 @@
+﻿<UserControl x:Class="KCTools.Views.QualcommView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:KCTools.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,14,22">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Sol kolon -->
+                <StackPanel Margin="0,0,16,0">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,14">
+                                <Border DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                        Style="{StaticResource Pill}" Padding="7,2">
+                                    <TextBlock Text="CANLI ALGILAMA" FontSize="8.5" FontWeight="Bold"
+                                               Foreground="{StaticResource Brush.Accent}" />
+                                </Border>
+                                <TextBlock Text="Cihaz Bilgisi" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+
+                            <ItemsControl ItemsSource="{Binding DeviceFields}"
+                                          ItemTemplate="{StaticResource Tpl.DeviceField}" />
+
+                            <Border Style="{StaticResource Sep}" Margin="0,4,0,10" />
+
+                            <TextBlock Style="{StaticResource T.Hint}"
+                                       Text="Değerler Windows PnP bilgisinden okunur; seri numarası USB tanımlayıcısından çözümlenir. Oturum açmadan alanlar boş kalır." />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Qualcomm Araçları" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="EDL erişimi gerektiren iş akışları"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+                            <ItemsControl ItemsSource="{Binding Tiles}" ItemTemplate="{StaticResource Tpl.ActionTile}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="3" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                           Text="{Binding FirehoseImageName}" Style="{StaticResource T.Mono}"
+                                           FontSize="10" VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.Text.Dim}" />
+                                <TextBlock Text="Firehose Protokolü" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+                            <TextBlock Text="XML paket üretimi · sektör hizalı hex veri · loopback simülasyonu"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,0,0,12" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Style="{StaticResource Input.Combo}"
+                                          ItemsSource="{Binding FirehoseActions}"
+                                          SelectedItem="{Binding FirehoseActionText, Mode=TwoWay}" />
+                                <TextBox Grid.Column="1" Style="{StaticResource Input.Text}" Margin="10,0,0,0"
+                                         Text="{Binding FirehoseFileName, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Dosya adı (read çıktısı / write kaynağı)" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}" Content="İmaj Seç"
+                                        Margin="10,0,0,0" Command="{Binding BrowseFirehoseImageCommand}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Başlangıç sektörü" Style="{StaticResource T.Label}"
+                                               Margin="0,0,0,4" />
+                                    <TextBox Style="{StaticResource Input.Text}"
+                                             Text="{Binding FirehoseStartSector, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <TextBlock Text="Sektör sayısı" Style="{StaticResource T.Label}"
+                                               Margin="0,0,0,4" />
+                                    <TextBox Style="{StaticResource Input.Text}"
+                                             Text="{Binding FirehoseSectorCount, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                    <TextBlock Text="Fiziksel bölüm" Style="{StaticResource T.Label}"
+                                               Margin="0,0,0,4" />
+                                    <TextBox Style="{StaticResource Input.Text}"
+                                             Text="{Binding FirehosePhysicalPartition, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <WrapPanel Margin="0,0,0,10">
+                                <Button Style="{StaticResource Btn.Secondary}" Content="XML Üret"
+                                        Margin="0,0,8,6" Command="{Binding BuildFirehoseXmlCommand}" />
+                                <Button Style="{StaticResource Btn.Primary}" Content="Loopback Simüle"
+                                        Margin="0,0,8,6" Command="{Binding SimulateFirehoseCommand}" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="rawprogram XML"
+                                        Margin="0,0,0,6" Command="{Binding BrowseRawProgramCommand}" />
+                            </WrapPanel>
+
+                            <Border Background="{StaticResource Brush.Bg.Console}"
+                                    BorderBrush="{StaticResource Brush.Border.Soft}"
+                                    BorderThickness="1" CornerRadius="8" Padding="10" MaxHeight="120">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock Text="{Binding FirehoseXmlPreview}"
+                                               FontFamily="{StaticResource Font.Mono}" FontSize="10.5"
+                                               Foreground="{StaticResource Brush.Log.Text}" TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </Border>
+
+                            <TextBlock Text="{Binding FirehoseDataPreview}" Style="{StaticResource T.Mono}"
+                                       FontSize="10" Foreground="{StaticResource Brush.Text.Muted}"
+                                       Margin="0,8,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ROM / Loader -->
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="ROM / Loader" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="rawprogram planı · loader indirme · Firehose ROM yazma"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}"
+                                        BorderThickness="1" CornerRadius="8" Height="36" Padding="10,0"
+                                        ToolTip="{Binding RawProgramPath}">
+                                    <TextBlock Text="{Binding RawProgramName}" Style="{StaticResource T.Mono}"
+                                               FontSize="10.5" VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}"
+                                        Content="XML Seç" Margin="10,0,0,0"
+                                        Command="{Binding BrowseRawProgramCommand}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding FlashSummary}" Style="{StaticResource T.Hint}"
+                                       TextWrapping="Wrap" Margin="0,0,0,8" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         Text="{Binding Chipset, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Chipset (ör. SM8650)" />
+                                <TextBlock Grid.Column="1" Text="{Binding LoaderName}"
+                                           Style="{StaticResource T.Mono}" FontSize="10"
+                                           Margin="10,0,0,0" VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Ghost}"
+                                        Content="Loader İndir" Margin="10,0,0,0"
+                                        Command="{Binding DownloadLoaderCommand}" />
+                            </Grid>
+
+                            <WrapPanel>
+                                <Button Style="{StaticResource Btn.Primary}" Content="ROM Flash (Simülasyon)"
+                                        Margin="0,0,8,6" Command="{Binding FlashRomCommand}" />
+                                <Button Style="{StaticResource Btn.Secondary}" Content="ROM Flash (Canlı WinUSB)"
+                                        Margin="0,0,0,6" Command="{Binding FlashRomUsbCommand}" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Sağ kolon -->
+                <StackPanel Grid.Column="1">
+                    <controls:OperationStatusCard />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Gereksinimler" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="EDL moduna geçmek için cihazı kapatıp ses kısma + USB kombinasyonunu kullanın." />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Firehose programlayıcı (prog_firehose_ddr.elf) seçili yonga ile eşleşmelidir." />
+                            </DockPanel>
+                            <DockPanel>
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="FRP ve bootloader işlemleri yalnızca sahibi olduğunuz cihazlarda kullanılmalıdır." />
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

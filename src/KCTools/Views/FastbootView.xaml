@@ -1,0 +1,205 @@
+<UserControl x:Class="KCTools.Views.FastbootView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:KCTools.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,14,22">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,16,0">
+                    <!-- Cihaz durumu -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,14">
+                                <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Bilgi Oku"
+                                        Style="{StaticResource Btn.Ghost}" FontSize="10.5" Padding="9,4"
+                                        Command="{Binding RefreshInfoCommand}" />
+                                <TextBlock Text="Cihaz Durumu" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Bootloader" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding BootloaderState}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Aktif slot" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ActiveSlot}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Seri numarası" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Serial}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Ürün" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Product}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Bootloader sürümü" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding BootloaderVersion}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Güvenli önyükleme" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding SecureBoot}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="132" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="unlock_ability" Style="{StaticResource T.Label}" />
+                                <TextBlock Grid.Column="1" Text="{Binding UnlockAbility}" Style="{StaticResource T.Value}" />
+                            </Grid>
+
+                            <Border Style="{StaticResource Sep}" Margin="0,12,0,10" />
+                            <TextBlock Style="{StaticResource T.Hint}"
+                                       Text="Değerler fastboot getvar all çıktısından okunur. Cihaz fastboot modunda değilse alanlar boş kalır." />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Partisyon yazma -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Partisyon Yaz" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="fastboot flash partisyon imaj"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Style="{StaticResource Input.Combo}" ItemsSource="{Binding Partitions}"
+                                          SelectedItem="{Binding SelectedPartition, Mode=TwoWay}"
+                                          ToolTip="Hedef partisyon" />
+                                <Border Grid.Column="1" Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                                        CornerRadius="8" Height="38" Padding="12,0" Margin="10,0,0,0"
+                                        ToolTip="{Binding ImagePath}">
+                                    <TextBlock Text="{Binding ImageName}" Style="{StaticResource T.Mono}"
+                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}" Content="Gözat"
+                                        Margin="10,0,0,0" Command="{Binding BrowseImageCommand}" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Yanlış partisyon/imaj cihazı açılmaz hale getirebilir; yazma öncesi seçimi doğrulayın." />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Primary}" Content="Flash"
+                                        Width="110" Margin="12,0,0,0" Command="{Binding FlashCommand}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Ham komut -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Fastboot Komutu" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Komut, canlı konsola satır satır yazılır."
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         Text="{Binding CommandText, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="Gönder"
+                                        Margin="10,0,0,0" Command="{Binding SendCommand}" />
+                            </Grid>
+                            <TextBlock Style="{StaticResource T.Hint}" Margin="0,10,0,0"
+                                       Text="Örnek: getvar all  ·  oem device-info  ·  flashing get_unlock_ability" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Araçlar -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Fastboot Araçları" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Bootloader seviyesinde işlemler"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+                            <ItemsControl ItemsSource="{Binding Tiles}" ItemTemplate="{StaticResource Tpl.ActionTile}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="3" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <controls:OperationStatusCard />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Güvenlik" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Bootloader kilidini açmak tüm kullanıcı verisini siler ve garantiyi etkileyebilir." />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="FRP silme (erase frp) çoğu cihazda açık bootloader gerektirir." />
+                            </DockPanel>
+                            <DockPanel>
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="A/B cihazlarda yanlış slot seçimi açılış döngüsüne yol açar; önce aktif slotu doğrulayın." />
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

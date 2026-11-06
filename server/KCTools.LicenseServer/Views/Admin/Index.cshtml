@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Panel";
+    var expiring = ViewBag.Expiring as System.Collections.Generic.List<License>
+                   ?? new System.Collections.Generic.List<License>();
+    var recent = ViewBag.Recent as System.Collections.Generic.List<AuditLog>
+                 ?? new System.Collections.Generic.List<AuditLog>();
+}
+
+<h1>Panel</h1>
+<p class="sub">Lisans platformu genel durumu</p>
+
+<div class="grid">
+    <div class="card">
+        <div class="k">Kullanıcı</div>
+        <div class="v">@ViewBag.UserCount</div>
+        <div class="s">kayıtlı hesap</div>
+    </div>
+    <div class="card">
+        <div class="k">Lisans</div>
+        <div class="v">@ViewBag.LicenseCount</div>
+        <div class="s">toplam anahtar</div>
+    </div>
+    <div class="card">
+        <div class="k">Aktif cihaz</div>
+        <div class="v">@ViewBag.ActiveDevices</div>
+        <div class="s">doğrulanmış bağlantı</div>
+    </div>
+    <div class="card">
+        <div class="k">Yaklaşan bitiş</div>
+        <div class="v">@expiring.Count</div>
+        <div class="s">30 gün içinde</div>
+    </div>
+</div>
+
+<div class="panel">
+    <h2 style="margin-top:0">Süresi yaklaşanlar</h2>
+
+    @if (expiring.Count == 0)
+    {
+        <p class="muted">30 gün içinde biten lisans yok.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+            <tr><th>Anahtar</th><th>Plan</th><th>Bitiş</th><th>Kullanıcı</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var item in expiring)
+            {
+                <tr>
+                    <td class="mono">@item.Key</td>
+                    <td>@item.Plan</td>
+                    <td>@item.EndsAt.ToString("yyyy-MM-dd")</td>
+                    <td>@(item.User?.Email ?? "—")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div class="panel">
+    <h2 style="margin-top:0">Son işlemler</h2>
+    <table>
+        <thead>
+        <tr><th>Zaman</th><th>Aktör</th><th>Eylem</th><th>Hedef</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var item in recent)
+        {
+            <tr>
+                <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.Actor</td>
+                <td class="mono">@item.Action</td>
+                <td>@item.EntityId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

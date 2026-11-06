@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="KCTools.Views.MtkView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:KCTools.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,14,22">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,16,0">
+                    <!-- Scatter seçimi -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                           Text="{Binding DeviceName}" FontFamily="{StaticResource Font.Mono}"
+                                           FontSize="10.5" VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.Text.Dim}" />
+                                <TextBlock Text="Scatter Dosyası" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+                            <TextBlock Text="Yazma işlemi için firmware paketindeki scatter tablosu"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}"
+                                        BorderThickness="1" CornerRadius="8" Height="38" Padding="12,0">
+                                    <TextBlock Text="{Binding ScatterDisplay}" Style="{StaticResource T.Mono}"
+                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="Gözat"
+                                        Margin="10,0,0,0" Click="BrowseScatter_Click" />
+                            </Grid>
+
+                            <TextBlock Style="{StaticResource T.Hint}" Margin="0,10,0,0"
+                                       Text="MTK_scatter.txt dosyası firmware paketinin kökünde bulunur; ürün adı ve bölüm tablosunu içerir." />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- BROM / DA -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="BROM / Download Agent" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="DA doğrulama, checksum ve blok planı (aktarım 6. parçada)"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                                        CornerRadius="8" Height="38" Padding="12,0"
+                                        ToolTip="{Binding DaPath}">
+                                    <TextBlock Text="{Binding DaFileName}" Style="{StaticResource T.Mono}"
+                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="DA Seç"
+                                        Margin="10,0,0,0" Command="{Binding BrowseDaCommand}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding DaSummary}" Style="{StaticResource T.Hint}" />
+                            <TextBlock Text="{Binding DaPlan}" Style="{StaticResource T.Mono}" FontSize="10"
+                                       Foreground="{StaticResource Brush.Text.Dim}" Margin="0,6,0,0"
+                                       TextWrapping="Wrap" />
+
+                            <Button Style="{StaticResource Btn.Primary}" Content="DA İncele" Margin="0,10,0,0"
+                                    HorizontalAlignment="Left" Command="{Binding InspectDaCommand}" />
+
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         Text="{Binding Chipset, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Chipset (ör. MT6789)" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Ghost}"
+                                        Content="DA İndir" Margin="8,0,0,0"
+                                        Command="{Binding DownloadDaCommand}" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}"
+                                        Content="DA Yükle (simülatör)" Margin="8,0,0,0"
+                                        Command="{Binding UploadDaCommand}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding DaUploadSummary}" Style="{StaticResource T.Hint}"
+                                       Margin="0,8,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Araçlar -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="MediaTek Araçları" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="BROM / Preloader erişimi"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,14" />
+                            <ItemsControl ItemsSource="{Binding Tiles}" ItemTemplate="{StaticResource Tpl.ActionTile}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="3" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <controls:OperationStatusCard />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="BROM Notları" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Cihazı pilsiz bağlayın; Preloader portu yalnızca ilk 3 saniye açıktır." />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="MTK sürücüsü (vcom) kurulu değilse BROM el sıkışması başarısız olur." />
+                            </DockPanel>
+                            <DockPanel>
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Format All işlemi IMEI ve kalibrasyon verisini siler; önce NVRAM yedeği alın." />
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

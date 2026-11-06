@@ -1,0 +1,309 @@
+﻿<UserControl x:Class="KCTools.Views.ModemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:KCTools.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Border Padding="22,18,14,22">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,16,0">
+                    <!-- Bağlantı -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,14">
+                                <TextBlock Text="AT Portu" Style="{StaticResource T.CardTitle}" />
+                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                           Text="{Binding PortStateText}" Style="{StaticResource T.Mono}"
+                                           FontSize="10.5" VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.Text.Muted}" />
+                            </DockPanel>
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Style="{StaticResource Input.Combo}" ItemsSource="{Binding Ports}"
+                                          SelectedItem="{Binding SelectedPort, Mode=TwoWay}"
+                                          DisplayMemberPath="Display" ToolTip="{Binding PortHint}" />
+                                <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="112"
+                                          Margin="10,0,0,0" ItemsSource="{Binding BaudRates}"
+                                          SelectedItem="{Binding SelectedBaud, Mode=TwoWay}"
+                                          ToolTip="Baud hızı" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Ghost}" Content="AT Bul"
+                                        FontSize="10.5" Padding="8,6" Margin="6,0,0,0"
+                                        Command="{Binding AutoDetectCommand}"
+                                        ToolTip="COM portlarını AT komutuyla dene" />
+                                <Button Grid.Column="3" Style="{StaticResource Btn.Ghost}" Content="Yenile"
+                                        FontSize="10.5" Padding="8,6" Margin="6,0,0,0"
+                                        Command="{Binding RefreshPortsCommand}" ToolTip="Portları yenile" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="AT komutları için modem portu (115200 8N1). Diag portu ayrı seçilir." />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Primary}"
+                                        Content="{Binding PortButtonText}" Width="132" Margin="12,0,0,0"
+                                        Command="{Binding TogglePortCommand}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Modem bilgisi -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,14">
+                                <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Bilgi Oku"
+                                        Style="{StaticResource Btn.Ghost}" FontSize="10.5" Padding="9,4"
+                                        Command="{Binding RunCommand}" CommandParameter="info" />
+                                <TextBlock Text="Modem Bilgisi" Style="{StaticResource T.CardTitle}" />
+                            </DockPanel>
+
+                            <ItemsControl ItemsSource="{Binding InfoFields}"
+                                          ItemTemplate="{StaticResource Tpl.DeviceField}" />
+
+                            <Border Style="{StaticResource Sep}" Margin="0,4,0,10" />
+                            <TextBlock Style="{StaticResource T.Hint}"
+                                       Text="IMEI AT+CGSN ile okunur ve Luhn sağlamasıyla doğrulanır. SIM/şebeke alanları CPIN, COPS ve CREG komutlarından gelir." />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- AT konsolu -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="AT Konsolu" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Komut ve yanıtlar canlı konsola satır satır yazılır."
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         FontFamily="{StaticResource Font.Mono}"
+                                         Text="{Binding CommandText, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="Gönder"
+                                        Margin="10,0,0,0" Command="{Binding SendCommand}" />
+                            </Grid>
+
+                            <WrapPanel>
+                                <Button Style="{StaticResource Btn.Ghost}" Content="ATI" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="ATI" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="AT+CGSN" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="AT+CGSN" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="AT+CSQ" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="AT+CSQ" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="AT+COPS?" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="AT+COPS?" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="AT+CPIN?" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="AT+CPIN?" />
+                                <Button Style="{StaticResource Btn.Ghost}" Content="AT+CGMR" FontSize="10.5"
+                                        Padding="9,4" Margin="0,0,6,6"
+                                        Command="{Binding QuickCommand}" CommandParameter="AT+CGMR" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Diag & QCN -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Diag Portu &amp; QCN" Style="{StaticResource T.CardTitle}" />
+                            <TextBlock Text="Ham diag gönderimi ve QCN bayt düzenleme (yedekli)"
+                                       Style="{StaticResource T.CardCaption}" Margin="0,3,0,12" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Style="{StaticResource Input.Combo}" ItemsSource="{Binding Ports}"
+                                          SelectedItem="{Binding DiagPort, Mode=TwoWay}"
+                                          DisplayMemberPath="Display" ToolTip="Diag (DM) portu" />
+                                <ComboBox Grid.Column="1" Style="{StaticResource Input.Combo}" Width="118"
+                                          Margin="10,0,0,0" ItemsSource="{Binding DiagBaudRates}"
+                                          SelectedItem="{Binding SelectedDiagBaud, Mode=TwoWay}" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}" Content="Diag Aç"
+                                        Margin="10,0,0,0" Command="{Binding OpenDiagCommand}" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         FontFamily="{StaticResource Font.Mono}"
+                                         Text="{Binding DiagHexText, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Örnek: 7E 00 00 00 00 00 7E" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="Hex Gönder"
+                                        Margin="10,0,0,0" Command="{Binding SendHexCommand}" />
+                            </Grid>
+
+                            <TextBlock Style="{StaticResource T.Hint}" Margin="0,0,0,12">
+                                <Run Text="Durum:" />
+                                <Run Text="{Binding DiagStateText, Mode=OneWay}" />
+                            </TextBlock>
+
+                            <Border Style="{StaticResource Sep}" Margin="0,0,0,12" />
+
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource Brush.Bg.Field}"
+                                        BorderBrush="{StaticResource Brush.Border.Default}" BorderThickness="1"
+                                        CornerRadius="8" Height="38" Padding="12,0"
+                                        ToolTip="{Binding QcnPath}">
+                                    <TextBlock Text="{Binding QcnFileName}" Style="{StaticResource T.Mono}"
+                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                </Border>
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="QCN Seç"
+                                        Margin="10,0,0,0" Command="{Binding BrowseQcnCommand}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding QcnSummary}" Style="{StaticResource T.Hint}" />
+                            <TextBlock Text="{Binding QcnHints}" Style="{StaticResource T.Mono}" FontSize="10"
+                                       Foreground="{StaticResource Brush.Text.Dim}" Margin="0,4,0,10"
+                                       TextWrapping="Wrap" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         Text="{Binding QcnSearchImei, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Dosyada aranacak IMEI (15 hane)" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Ghost}" Content="Ara"
+                                        Margin="10,0,0,0" Command="{Binding SearchImeiCommand}" />
+                            </Grid>
+
+                            <ListBox ItemsSource="{Binding QcnMatches}" MaxHeight="110" Background="Transparent"
+                                     BorderThickness="0" SelectedItem="{Binding SelectedMatch, Mode=TwoWay}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Focusable" Value="False" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="6"
+                                                            Padding="8,4">
+                                                        <ContentPresenter />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background"
+                                                                    Value="{StaticResource Brush.Accent.Soft}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="82" />
+                                                <ColumnDefinition Width="96" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding OffsetText}" Style="{StaticResource T.Mono}"
+                                                       FontSize="10" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Kind}" FontSize="10"
+                                                       Foreground="{StaticResource Brush.Accent}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Preview}" Style="{StaticResource T.Mono}"
+                                                       FontSize="10" TextTrimming="CharacterEllipsis" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource Input.Text}"
+                                         Text="{Binding NewImei, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Yazılacak yeni IMEI" />
+                                <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Content="Değiştir"
+                                        Margin="10,0,0,0" Command="{Binding ApplyImeiCommand}" />
+                                <Button Grid.Column="2" Style="{StaticResource Btn.Primary}" Content="Yedekli Kaydet"
+                                        Margin="10,0,0,0" Command="{Binding SaveQcnCommand}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <controls:OperationStatusCard />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Hızlı İşlemler" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <ItemsControl ItemsSource="{Binding Tiles}" ItemTemplate="{StaticResource Tpl.ActionTile}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="2" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Notlar" Style="{StaticResource T.CardTitle}" Margin="0,0,0,12" />
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Warning}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="IMEI değiştirmek birçok ülkede yasal sınırlamalara tabidir; yalnızca sahibi olduğunuz cihazlarda kullanın." />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,9">
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="QCN düzenlemesi bayt düzeyinde yapılır; her kayıt öncesi otomatik yedek alınır." />
+                            </DockPanel>
+                            <DockPanel>
+                                <Border Width="4" Height="4" CornerRadius="2" DockPanel.Dock="Left"
+                                        Background="{StaticResource Brush.Accent}" VerticalAlignment="Center"
+                                        Margin="0,0,9,0" />
+                                <TextBlock Style="{StaticResource T.Hint}"
+                                           Text="Diag portu genellikle 921600 baud çalışır; AT portu ile aynı COM olamaz." />
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

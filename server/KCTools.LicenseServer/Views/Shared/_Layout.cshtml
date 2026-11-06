@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · KC Tools Lisans</title>
+    <link rel="stylesheet" href="/site.css" />
+</head>
+<body>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <header class="top">
+        <a class="brand" href="/">KC<span>TOOLS</span> <small>lisans</small></a>
+        <nav>
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="/Admin">Panel</a>
+                <a href="/Admin/Users">Kullanıcılar</a>
+                <a href="/Admin/Licenses">Lisanslar</a>
+                <a href="/Admin/Devices">Cihazlar</a>
+                <a href="/Admin/Duration">Süreler</a>
+                <a href="/Admin/Audit">Geçmiş</a>
+                <a href="/Admin/Settings">Ayarlar</a>
+            }
+            else
+            {
+                <a href="/Portal">Hesabım</a>
+            }
+        </nav>
+        <div class="who">
+            <span>@User.Identity!.Name</span>
+            <form method="post" action="/Account/Logout" class="inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="link">Çıkış</button>
+            </form>
+        </div>
+    </header>
+}
+
+<main class="wrap">
+    @if (TempData["Message"] is string message)
+    {
+        <div class="alert ok">@message</div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert err">@error</div>
+    }
+
+    @RenderBody()
+</main>
+
+<footer class="foot">KC Tools lisans platformu · güvenli oturum</footer>
+</body>
+</html>

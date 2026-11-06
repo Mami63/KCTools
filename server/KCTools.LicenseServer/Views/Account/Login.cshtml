@@ -1,0 +1,39 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Giriş";
+}
+
+<div class="login-wrap">
+    <div class="login panel">
+        <h1>KC Tools</h1>
+        <p class="sub">Lisans yönetim paneli</p>
+
+        <form method="post" asp-action="Login">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="err-list"></div>
+
+            <div class="field">
+                <label asp-for="Email">E-posta</label>
+                <input asp-for="Email" type="email" autocomplete="username" />
+            </div>
+
+            <div class="field">
+                <label asp-for="Password">Parola</label>
+                <input asp-for="Password" type="password" autocomplete="current-password" />
+            </div>
+
+            <label style="display:flex;gap:8px;align-items:center">
+                <input asp-for="RememberMe" type="checkbox" style="min-width:auto" />
+                Beni hatırla
+            </label>
+
+            <button type="submit">Giriş yap</button>
+        </form>
+
+        <p class="sub" style="margin-top:16px">
+            Hesabınız yoksa yöneticinizden davet isteyin.
+        </p>
+    </div>
+</div>
